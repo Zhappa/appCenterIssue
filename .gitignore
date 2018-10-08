@@ -1,0 +1,13 @@
+#intellig idea
+.idea
+
+#Gradle
+.gradle
+gradle
+build
+
+#Maven
+pom.xml
+target
+
+out
