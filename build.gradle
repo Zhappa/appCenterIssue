@@ -16,14 +16,14 @@ repositories {
 
 dependencies {
     testImplementation group: 'junit', name: 'junit', version: '4.12'
-    testImplementation group: 'com.microsoft.appcenter', name:'appium-test-extension', version: '1.0'
+    testImplementation group: 'com.microsoft.appcenter', name: 'appium-test-extension', version: '1.0'
 }
 
 task createPom {
     pom {
         withXml {
-            def dependenciesNode = asNode().appendNode('dependencies')
-
+            // Creating dependencies Node
+            def dependenciesNode = asNode()
             //Iterate over the compile dependencies (we don't want the test ones), adding a <dependency> node for each
             configurations.testCompile.allDependencies.each {
                 def dependencyNode = dependenciesNode.appendNode('dependency')
@@ -31,14 +31,20 @@ task createPom {
                 dependencyNode.appendNode('artifactId', it.name)
                 dependencyNode.appendNode('version', it.version)
             }
-
+            //Creating repositories Node
+            def repositoriesNode = asNode().appendNode("repositories")
+            def repositoryNode = repositoriesNode.appendNode("repository")
+            repositoryNode.appendNode("id", "jcenter")
+            repositoryNode.appendNode("url", "https://jcenter.bintray.com/")
+            //Creating profiles Node
             def profilesNode = asNode().appendNode('profiles')
             profilesNode.append(new XmlParser().parse('https://raw.githubusercontent.com/Microsoft/AppCenter-Test-Appium-Java-Extensions/master/gradleuploadprofilesnippet.xml'))
         }
     }.writeTo("pom.xml")
 }
 
-clean{
+
+clean {
     delete "pom.xml"
 }
 
